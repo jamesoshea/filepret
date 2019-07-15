@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { Divider } from "@blueprintjs/core";
 import axios from "axios";
 import "./App.css";
 const REACT_APP_BASE_URL =
@@ -55,19 +56,23 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
-        <h1>most-host</h1>
-        <p>Welcome to cool app</p>
-        <form onSubmit={() => false}>
+      <div className="app">
+        <h1>host-with-the-most</h1>
+        <p>
+          Enterprise grade&trade; JavaScript snippet formatter and file host
+        </p>
+        <Divider />
+        <label className="bp3-file-input">
+          <span className="bp3-file-upload-input"></span>
           <input type="file" name="fileUploaded" onChange={this.uploadFile} />
-        </form>
+        </label>
         {this.state.formattedFile && this.state.formattedFileName && (
           <div>
-            <h3>enjoy your form atting</h3>
+            <Divider />
             <a
               href={`${window.location.origin}/files/${this.state.formattedFileName}`}
             >
-              permalink
+              Permalink
             </a>
             <SyntaxHighlighter language="javascript" style={docco}>
               {this.state.formattedFile}
