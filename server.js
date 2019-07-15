@@ -1,12 +1,11 @@
 const express = require("express");
-// const crypto = require("crypto");
 const path = require("path");
 const prettier = require("prettier");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
 const cors = require("cors");
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 app.use(express.static(path.join(__dirname, "frontend/build")));
 app.use(fileUpload());
@@ -18,29 +17,22 @@ app.post("/api/upload", function(req, res) {
   }
   const file = req.files[0];
   const currentTime = Date.now();
-  const fileName = `./files/${file.md5}-${currentTime}.js`;
+  const fileName = `/tmp/${file.md5}-${currentTime}.js`;
   file.mv(fileName, err => {
     if (err) return res.status(500).send(err);
     const unformattedFile = fs.readFileSync(fileName).toString();
-    const formattedFile = prettier.format(unformattedFile, {
-      semi: false,
-      parser: "babel"
-    });
+    const formattedFile = prettier.format(unformattedFile);
     fs.writeFileSync(
-      `./files/${file.md5}-${currentTime}-formatted.js`,
+      `/tmp/${file.md5}-${currentTime}-formatted.js`,
       formattedFile
     );
-    res.sendFile(
-      path.join(__dirname, `./files/${file.md5}-${currentTime}-formatted.js`),
-      {},
-      err => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("File sent");
-        }
+    res.sendFile(`/tmp/${file.md5}-${currentTime}-formatted.js`, {}, err => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("File sent");
       }
-    );
+    });
   });
 });
 

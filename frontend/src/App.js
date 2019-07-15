@@ -11,6 +11,11 @@ class App extends Component {
       formattedFile: ""
     };
     this.uploadFile = e => {
+      const REACT_APP_BASE_URL =
+        process.env.NODE_ENV === "production"
+          ? "./api"
+          : "http://localhost:8000/api";
+
       const files = Array.from(e.target.files);
       const formData = new FormData();
 
@@ -18,7 +23,7 @@ class App extends Component {
         formData.append(i, file);
       });
       axios
-        .post(`${process.env.REACT_APP_BASE_URL}/upload`, formData, {
+        .post(`${REACT_APP_BASE_URL}/upload`, formData, {
           headers: {
             Accept: "text/plain",
             Encoding: "multipart/form-data"
