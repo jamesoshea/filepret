@@ -12,11 +12,13 @@ Build the frontend: `cd frontend && yarn build`
 
 Go back to the project root and run the backend: `node server.js`
 
+## Live "Demo"
+
+[Enjoy](https://host-with-the-most.now.sh/)
+
 ## Roadmap
 
 - Dockerise the app to make it easier to self-host
-- Create a proper UI
-- Error handling in the backend
 - Deploy using something other than Now, don't use the `tmp` folder for files
 - Proper monorepo structure
 - Think of a better name
