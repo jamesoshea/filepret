@@ -16,8 +16,7 @@ app.post("/upload", function(req, res) {
   }
   const file = req.files.fileUploaded;
   const currentTime = Date.now();
-  const fileName = `./files/${currentTime}.js`;
-
+  const fileName = `./files/${file.md5}-${currentTime}.js`
   file.mv(fileName, (err) => {
     if (err) return res.status(500).send(err);
     const unformattedFile = fs.readFileSync(fileName).toString();
@@ -25,12 +24,12 @@ app.post("/upload", function(req, res) {
       semi: false,
       parser: "babel"
     });
-    fs.writeFileSync(`./files/${currentTime}-formatted.js`, formattedFile);
-    res.sendFile(path.join(__dirname, `files/${currentTime}-formatted.js`), {}, (err) => {
+    fs.writeFileSync(`./files/${file.md5}-${currentTime}-formatted.js`, formattedFile);
+    res.sendFile(path.join(__dirname, `./files/${file.md5}-${currentTime}-formatted.js`), {}, (err) => {
         if (err) {
           console.log(err)
         } else {
-          console.log('Sent:', fileName)
+          console.log('File sent')
         }
       })
   });
