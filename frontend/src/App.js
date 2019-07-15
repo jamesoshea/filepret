@@ -3,19 +3,17 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import axios from "axios";
 import "./App.css";
+const REACT_APP_BASE_URL =
+  process.env.NODE_ENV === "production" ? "/api" : "http://localhost:8000/api";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
+      formattedFileName: "",
       formattedFile: ""
     };
     this.uploadFile = e => {
-      const REACT_APP_BASE_URL =
-        process.env.NODE_ENV === "production"
-          ? "./api"
-          : "http://localhost:8000/api";
-
       const files = Array.from(e.target.files);
       const formData = new FormData();
 
@@ -25,18 +23,36 @@ class App extends Component {
       axios
         .post(`${REACT_APP_BASE_URL}/upload`, formData, {
           headers: {
-            Accept: "text/plain",
+            Accept: "application/json",
             Encoding: "multipart/form-data"
           }
         })
         .then(res => {
           this.setState({
-            formattedFile: res.data
+            formattedFileName: res.data.fileName,
+            formattedFile: res.data.file
           });
         });
     };
   }
-
+  componentDidMount() {
+    if (!window.location.pathname.includes("/files/")) {
+      return;
+    }
+    const fileName = window.location.pathname.split("/")[2];
+    axios
+      .get(`${REACT_APP_BASE_URL}/files/${fileName}`, {
+        headers: {
+          Accept: "text/plain"
+        }
+      })
+      .then(res => {
+        this.setState({
+          formattedFileName: fileName,
+          formattedFile: res.data
+        });
+      });
+  }
   render() {
     return (
       <div className="App">
@@ -45,9 +61,14 @@ class App extends Component {
         <form onSubmit={() => false}>
           <input type="file" name="fileUploaded" onChange={this.uploadFile} />
         </form>
-        {this.state.formattedFile && (
+        {this.state.formattedFile && this.state.formattedFileName && (
           <div>
-            <h1>voici le file, wow</h1>
+            <h3>enjoy your form atting</h3>
+            <a
+              href={`${window.location.origin}/files/${this.state.formattedFileName}`}
+            >
+              permalink
+            </a>
             <SyntaxHighlighter language="javascript" style={docco}>
               {this.state.formattedFile}
             </SyntaxHighlighter>

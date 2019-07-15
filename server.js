@@ -11,6 +11,20 @@ app.use(express.static(path.join(__dirname, "frontend/build")));
 app.use(fileUpload());
 app.use(cors());
 
+app.get("/files/:fileId", (req, res) => {
+  res.sendFile(path.join(__dirname, "./frontend/build/index.html"));
+});
+
+app.get("/api/files/:fileName", (req, res) => {
+  const file = res.sendFile(`/tmp/${req.params.fileName}.js`, {}, err => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("File sent");
+    }
+  });
+});
+
 app.post("/api/upload", function(req, res) {
   if (!req.files || Object.keys(req.files).length == 0) {
     return res.status(400).send("No files were uploaded.");
@@ -26,12 +40,9 @@ app.post("/api/upload", function(req, res) {
       `/tmp/${file.md5}-${currentTime}-formatted.js`,
       formattedFile
     );
-    res.sendFile(`/tmp/${file.md5}-${currentTime}-formatted.js`, {}, err => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("File sent");
-      }
+    res.status(200).send({
+      fileName: `${file.md5}-${currentTime}-formatted`,
+      file: formattedFile
     });
   });
 });
