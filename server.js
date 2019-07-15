@@ -5,12 +5,12 @@ const prettier = require("prettier");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
 const app = express();
-const port = 3000;
+const port = 8000;
 
-app.use(express.static(path.join(__dirname, "static")));
+app.use(express.static(path.join(__dirname, "frontend/build")));
 app.use(fileUpload());
 
-app.post("/upload", function(req, res) {
+app.post("/api/upload", function(req, res) {
   if (!req.files || Object.keys(req.files).length == 0) {
     return res.status(400).send("No files were uploaded.");
   }
