@@ -11,17 +11,14 @@ app.use(express.static(path.join(__dirname, "static")));
 app.use(fileUpload());
 
 app.post("/upload", function(req, res) {
-  if (Object.keys(req.files).length == 0) {
+  if (!req.files || Object.keys(req.files).length == 0) {
     return res.status(400).send("No files were uploaded.");
   }
-
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  let sampleFile = req.files.fileUploaded;
-
-  // Use the mv() method to place the file somewhere on your server
+  const file = req.files.fileUploaded;
   const currentTime = Date.now();
   const fileName = `./files/${currentTime}.js`;
-  sampleFile.mv(fileName, function(err) {
+
+  file.mv(fileName, (err) => {
     if (err) return res.status(500).send(err);
     const unformattedFile = fs.readFileSync(fileName).toString();
     const formattedFile = prettier.format(unformattedFile, {
@@ -29,7 +26,13 @@ app.post("/upload", function(req, res) {
       parser: "babel"
     });
     fs.writeFileSync(`./files/${currentTime}-formatted.js`, formattedFile);
-    res.send("File uploaded!");
+    res.sendFile(path.join(__dirname, `files/${currentTime}-formatted.js`), {}, (err) => {
+        if (err) {
+          console.log(err)
+        } else {
+          console.log('Sent:', fileName)
+        }
+      })
   });
 });
 
