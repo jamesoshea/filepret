@@ -21,7 +21,7 @@ app.get("/files/:fileId", (req, res, next) => {
 
 app.get("/api/files/:fileName", (req, res, next) => {
   try {
-    const file = res.sendFile(`/tmp/${req.params.fileName}.js`, {}, err => {
+    res.sendFile(`/tmp/${req.params.fileName}.js`, {}, err => {
       if (err) {
         console.log(err);
       } else {
@@ -35,7 +35,7 @@ app.get("/api/files/:fileName", (req, res, next) => {
 
 app.post("/api/upload", function(req, res, next) {
   try {
-    if (!req.files || Object.keys(req.files).length == 0) {
+    if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).send("No files were uploaded.");
     }
     const file = req.files[0];

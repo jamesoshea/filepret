@@ -18,7 +18,6 @@ It was my friend Kevin's idea
 ## Roadmap
 
 - Deploy using something other than Now, don't use the `tmp` folder for files
-- Proper monorepo structure
 - Think of a better name
 - A prettier UI
 
