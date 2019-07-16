@@ -8,9 +8,8 @@ It was my friend Kevin's idea
 
 ## Installation
 
-Build the frontend: `cd frontend && yarn build`
-
-Go back to the project root and run the backend: `node server.js`
+`docker build . -t <whatever tag you would like to use>`
+`docker run -it -p 8000:8000 <the tagname you just chose>`
 
 ## Live "Demo"
 
@@ -18,10 +17,10 @@ Go back to the project root and run the backend: `node server.js`
 
 ## Roadmap
 
-- Dockerise the app to make it easier to self-host
 - Deploy using something other than Now, don't use the `tmp` folder for files
 - Proper monorepo structure
 - Think of a better name
+- A prettier UI
 
 ## Contributing
 
