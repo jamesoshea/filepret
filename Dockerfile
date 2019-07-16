@@ -1,4 +1,4 @@
-FROM node:10.16.0
+FROM node:10.16.0-alpine
 
 RUN mkdir frontend
 COPY frontend/package.json frontend/package.json
@@ -13,5 +13,7 @@ COPY server.js /
 COPY package.json package.json
 COPY package-lock.json package-lock.json
 RUN npm ci
+
+EXPOSE 8000
 
 CMD node server.js
