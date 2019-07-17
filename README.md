@@ -20,6 +20,7 @@ It was my friend Kevin's idea
 - Deploy using something other than Now, don't use the `tmp` folder for files
 - Think of a better name
 - A prettier UI
+- Multiple language support (thanks to prettier) with automatic language detection
 
 ## Contributing
 

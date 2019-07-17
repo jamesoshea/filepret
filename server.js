@@ -1,9 +1,9 @@
+const cors = require("cors");
 const express = require("express");
-const path = require("path");
-const prettier = require("prettier");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
-const cors = require("cors");
+const path = require("path");
+const prettier = require("prettier");
 const app = express();
 const port = process.env.PORT || 8000;
 

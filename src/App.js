@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { Divider } from "@blueprintjs/core";
@@ -7,36 +7,30 @@ import "./App.css";
 const REACT_APP_BASE_URL =
   process.env.NODE_ENV === "production" ? "/api" : "http://localhost:8000/api";
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      formattedFileName: "",
-      formattedFile: ""
-    };
-    this.uploadFile = e => {
-      const files = Array.from(e.target.files);
-      const formData = new FormData();
+const App = props => {
+  const [formattedFile, setFormattedFile] = useState("");
+  const [formattedFileName, setFormattedFileName] = useState("");
 
-      files.forEach((file, i) => {
-        formData.append(i, file);
+  const uploadFile = e => {
+    const files = Array.from(e.target.files);
+    const formData = new FormData();
+    files.forEach((file, i) => {
+      formData.append(i, file);
+    });
+    axios
+      .post(`${REACT_APP_BASE_URL}/upload`, formData, {
+        headers: {
+          Accept: "application/json",
+          Encoding: "multipart/form-data"
+        }
+      })
+      .then(res => {
+        setFormattedFileName(res.data.fileName);
+        setFormattedFile(res.data.file);
       });
-      axios
-        .post(`${REACT_APP_BASE_URL}/upload`, formData, {
-          headers: {
-            Accept: "application/json",
-            Encoding: "multipart/form-data"
-          }
-        })
-        .then(res => {
-          this.setState({
-            formattedFileName: res.data.fileName,
-            formattedFile: res.data.file
-          });
-        });
-    };
-  }
-  componentDidMount() {
+  };
+
+  useEffect(() => {
     if (!window.location.pathname.includes("/files/")) {
       return;
     }
@@ -48,40 +42,32 @@ class App extends Component {
         }
       })
       .then(res => {
-        this.setState({
-          formattedFileName: fileName,
-          formattedFile: res.data
-        });
+        setFormattedFileName(fileName);
+        setFormattedFile(res.data);
       });
-  }
-  render() {
-    return (
-      <div className="app">
-        <h1>host-with-the-most</h1>
-        <p>
-          Enterprise grade&trade; JavaScript snippet formatter and file host
-        </p>
-        <Divider />
-        <label className="bp3-file-input">
-          <span className="bp3-file-upload-input"></span>
-          <input type="file" name="fileUploaded" onChange={this.uploadFile} />
-        </label>
-        {this.state.formattedFile && this.state.formattedFileName && (
-          <div>
-            <Divider />
-            <a
-              href={`${window.location.origin}/files/${this.state.formattedFileName}`}
-            >
-              Permalink
-            </a>
-            <SyntaxHighlighter language="javascript" style={docco}>
-              {this.state.formattedFile}
-            </SyntaxHighlighter>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+  }, []);
+  return (
+    <div className="app">
+      <h1>host-with-the-most</h1>
+      <p>Enterprise grade&trade; JavaScript snippet formatter and file host</p>
+      <Divider />
+      <label className="bp3-file-input">
+        <span className="bp3-file-upload-input"></span>
+        <input type="file" name="fileUploaded" onChange={uploadFile} />
+      </label>
+      {formattedFile && formattedFileName && (
+        <div>
+          <Divider />
+          <a href={`${window.location.origin}/files/${formattedFileName}`}>
+            Permalink
+          </a>
+          <SyntaxHighlighter language="javascript" style={docco}>
+            {formattedFile}
+          </SyntaxHighlighter>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default App;
