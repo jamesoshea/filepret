@@ -28,12 +28,20 @@ app.get("/files/:fileId", (req, res, next) => {
 
 app.get("/api/files/:fileName", (req, res, next) => {
   try {
-    res.sendFile(`/tmp/${req.params.fileName}.js`, {}, err => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("File sent");
-      }
+    const params = {
+      Bucket: "host-with-the-most",
+      Key: `${req.params.fileName.replace("-formatted", "")}.js`
+    };
+    const s3 = new AWS.S3();
+    s3.getObject(params, function(err, data) {
+      if (err) throw new Error(err);
+      res.send(data.Body.toString(), {}, err => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("File sent");
+        }
+      });
     });
   } catch (error) {
     next(new Error(error));
@@ -53,7 +61,7 @@ app.post("/api/upload", function(req, res, next) {
       const unformattedFile = fs.readFileSync(fileName).toString();
       const formattedFile = prettier.format(unformattedFile);
       const base64data = new Buffer(formattedFile, "binary");
-      var s3 = new AWS.S3();
+      const s3 = new AWS.S3();
       s3.putObject(
         {
           Bucket: "host-with-the-most",
