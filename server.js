@@ -1,11 +1,18 @@
+require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const fileUpload = require("express-fileupload");
+const AWS = require("aws-sdk");
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
 const app = express();
 const port = process.env.PORT || 8000;
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY
+});
 
 app.use(express.static(path.join(__dirname, "build")));
 app.use(fileUpload());
@@ -45,14 +52,27 @@ app.post("/api/upload", function(req, res, next) {
       if (err) return res.status(500).send(err);
       const unformattedFile = fs.readFileSync(fileName).toString();
       const formattedFile = prettier.format(unformattedFile);
-      fs.writeFileSync(
-        `/tmp/${file.md5}-${currentTime}-formatted.js`,
-        formattedFile
+      const base64data = new Buffer(formattedFile, "binary");
+      var s3 = new AWS.S3();
+      s3.putObject(
+        {
+          Bucket: "host-with-the-most",
+          Key: fileName.slice(5),
+          Body: base64data,
+          ACL: "public-read"
+        },
+        resp => {
+          console.log(resp);
+          fs.writeFileSync(
+            `/tmp/${file.md5}-${currentTime}-formatted.js`,
+            formattedFile
+          );
+          res.status(200).send({
+            fileName: `${file.md5}-${currentTime}-formatted`,
+            file: formattedFile
+          });
+        }
       );
-      res.status(200).send({
-        fileName: `${file.md5}-${currentTime}-formatted`,
-        file: formattedFile
-      });
     });
   } catch (error) {
     next(new Error(error));
