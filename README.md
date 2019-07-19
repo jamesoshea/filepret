@@ -9,6 +9,7 @@ It was my friend Kevin's idea
 ## Installation
 
 `docker build . -t <whatever tag you would like to use>`
+
 `docker run -it -p 8000:8000 <the tagname you just chose>`
 
 ## Live "Demo"
@@ -17,7 +18,7 @@ It was my friend Kevin's idea
 
 ## Roadmap
 
-- Deploy using something other than Now, don't use the `tmp` folder for files
+- Deploy using something other than Now
 - Think of a better name
 - A prettier UI
 - Multiple language support (thanks to prettier) with automatic language detection
