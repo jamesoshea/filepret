@@ -8,7 +8,10 @@ const path = require("path");
 const prettier = require("prettier");
 const app = express();
 
-const { S3PutObjectPromisified } = require("./util/promisified-functions");
+const {
+  S3GetObjectPromisified,
+  S3PutObjectPromisified
+} = require("./util/promisified-functions");
 
 const port = process.env.PORT || 8000;
 
@@ -29,17 +32,12 @@ app.get("/files/:fileId", (req, res, next) => {
   }
 });
 
-app.get("/api/files/:fileName", (req, res, next) => {
+app.get("/api/files/:fileName", async (req, res, next) => {
   try {
-    const params = {
-      Bucket: "host-with-the-most",
-      Key: `${req.params.fileName.replace("-formatted", "")}.js`
-    };
-    const s3 = new AWS.S3();
-    s3.getObject(params, function(err, data) {
-      if (err) throw new Error(err);
-      res.send(data.Body.toString());
-    });
+    const data = await S3GetObjectPromisified(
+      `${req.params.fileName.replace("-formatted", "")}.js`
+    );
+    res.send(data.Body.toString());
   } catch (error) {
     next(new Error(error));
   }
