@@ -1,6 +1,1 @@
-@import "~normalize.css";
-@import "~@blueprintjs/core/lib/css/blueprint.css";
-
-.app {
-  margin: 0 10vw;
-}
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");

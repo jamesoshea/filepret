@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { Divider } from "@blueprintjs/core";
+import { Grommet, Heading } from "grommet";
 import axios from "axios";
 import "./App.css";
+import FileInput from "./components/FileInput";
+import Permalink from "./components/Permalink";
+
+const theme = {
+  global: {
+    font: {
+      family: "Roboto",
+      size: "14px",
+      height: "20px"
+    }
+  }
+};
+
 const REACT_APP_BASE_URL =
   process.env.NODE_ENV === "production" ? "/api" : "http://localhost:8000/api";
 
-const App = props => {
+const App = () => {
   const [formattedFile, setFormattedFile] = useState("");
   const [formattedFileName, setFormattedFileName] = useState("");
+  const fileInput = React.createRef();
 
-  const uploadFile = e => {
-    const files = Array.from(e.target.files);
-    const formData = new FormData();
-    files.forEach((file, i) => {
-      formData.append(i, file);
-    });
+  const uploadFile = formData => {
     axios
       .post(`${REACT_APP_BASE_URL}/upload`, formData, {
         headers: {
@@ -27,6 +36,10 @@ const App = props => {
       .then(res => {
         setFormattedFileName(res.data.fileName);
         setFormattedFile(res.data.file);
+      })
+      .catch(err => {
+        setFormattedFileName("");
+        setFormattedFile("");
       });
   };
 
@@ -46,27 +59,20 @@ const App = props => {
         setFormattedFile(res.data);
       });
   }, []);
+
   return (
-    <div className="app">
-      <h1>host-with-the-most</h1>
-      <p>Enterprise grade&trade; JavaScript snippet formatter and file host</p>
-      <Divider />
-      <label className="bp3-file-input">
-        <span className="bp3-file-upload-input"></span>
-        <input type="file" name="fileUploaded" onChange={uploadFile} />
-      </label>
+    <Grommet theme={theme}>
+      <Heading>host-with-the-most</Heading>
+      <FileInput inputRef={fileInput} onFileChanged={uploadFile} />
       {formattedFile && formattedFileName && (
         <div>
-          <Divider />
-          <a href={`${window.location.origin}/files/${formattedFileName}`}>
-            Permalink
-          </a>
+          <Permalink formattedFileName={formattedFileName} />
           <SyntaxHighlighter language="javascript" style={docco}>
             {formattedFile}
           </SyntaxHighlighter>
         </div>
       )}
-    </div>
+    </Grommet>
   );
 };
 
