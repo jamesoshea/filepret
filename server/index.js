@@ -7,6 +7,9 @@ const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
 const app = express();
+
+const { S3PutObjectPromisified } = require("./util/promisified-functions");
+
 const port = process.env.PORT || 8000;
 
 AWS.config.update({
@@ -35,20 +38,14 @@ app.get("/api/files/:fileName", (req, res, next) => {
     const s3 = new AWS.S3();
     s3.getObject(params, function(err, data) {
       if (err) throw new Error(err);
-      res.send(data.Body.toString(), {}, err => {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("File sent");
-        }
-      });
+      res.send(data.Body.toString());
     });
   } catch (error) {
     next(new Error(error));
   }
 });
 
-app.post("/api/upload", function(req, res, next) {
+app.post("/api/upload", async (req, res, next) => {
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).send("No files were uploaded.");
@@ -56,31 +53,21 @@ app.post("/api/upload", function(req, res, next) {
     const file = req.files[0];
     const currentTime = Date.now();
     const fileName = `/tmp/${file.md5}-${currentTime}.js`;
-    file.mv(fileName, err => {
+
+    file.mv(fileName, async err => {
       if (err) return res.status(500).send(err);
       const unformattedFile = fs.readFileSync(fileName).toString();
       const formattedFile = prettier.format(unformattedFile);
       const base64data = new Buffer(formattedFile, "binary");
-      const s3 = new AWS.S3();
-      s3.putObject(
-        {
-          Bucket: "host-with-the-most",
-          Key: fileName.slice(5),
-          Body: base64data,
-          ACL: "public-read"
-        },
-        resp => {
-          console.log(resp);
-          fs.writeFileSync(
-            `/tmp/${file.md5}-${currentTime}-formatted.js`,
-            formattedFile
-          );
-          res.status(200).send({
-            fileName: `${file.md5}-${currentTime}-formatted`,
-            file: formattedFile
-          });
-        }
+      await S3PutObjectPromisified(fileName, base64data);
+      fs.writeFileSync(
+        `/tmp/${file.md5}-${currentTime}-formatted.js`,
+        formattedFile
       );
+      res.status(200).send({
+        fileName: `${file.md5}-${currentTime}-formatted`,
+        file: formattedFile
+      });
     });
   } catch (error) {
     next(new Error(error));

@@ -4,8 +4,8 @@
   "description": "Enterprise grade™ JavaScript snippet formatter and file host",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js & react-scripts start",
+    "start": "node server",
+    "dev": "nodemon server & react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
