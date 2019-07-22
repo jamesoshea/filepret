@@ -20,13 +20,13 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_KEY
 });
 
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "../build")));
 app.use(fileUpload());
 app.use(cors());
 
 app.get("/files/:fileId", (req, res, next) => {
   try {
-    res.sendFile(path.join(__dirname, "./build/index.html"));
+    res.sendFile(path.join(__dirname, "../build/index.html"));
   } catch (error) {
     next(new Error(error));
   }

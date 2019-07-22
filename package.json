@@ -2,7 +2,7 @@
   "name": "host-with-the-most",
   "version": "0.0.1",
   "description": "Enterprise grade™ JavaScript snippet formatter and file host",
-  "main": "server.js",
+  "main": "server/index.js",
   "scripts": {
     "start": "node server",
     "dev": "nodemon server & react-scripts start",

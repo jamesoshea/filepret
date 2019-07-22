@@ -1,12 +1,12 @@
 FROM node:10.16.0-alpine
 
-COPY public public
-COPY src src
 COPY package.json /
 COPY package-lock.json /
 RUN npm ci
+COPY public public
+COPY src src
 RUN npm run build
-COPY server.js /
+COPY server server
 
 EXPOSE 8000
 
