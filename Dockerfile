@@ -1,5 +1,7 @@
 FROM node:10.16.0-alpine
 
+
+COPY .env /
 COPY package.json /
 COPY package-lock.json /
 RUN npm ci
