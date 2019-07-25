@@ -6,6 +6,10 @@ This is a simple fileserver with a React frontend that automatically formats Jav
 
 It was my friend Kevin's idea
 
+## Running a Dev Server
+
+`npm run dev`
+
 ## Installation
 
 `docker build . -t <whatever tag you would like to use>`
