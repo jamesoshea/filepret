@@ -39,3 +39,18 @@ module.exports.S3PutObjectPromisified = (fileName, data) => {
     }
   });
 };
+
+module.exports.ExpressMoveFilePromisified = (file, fileName) => {
+  return new Promise((resolve, reject) => {
+    try {
+      file.mv(fileName, async err => {
+        if (err) {
+          reject(err);
+        }
+        resolve();
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
