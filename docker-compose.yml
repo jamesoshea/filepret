@@ -18,6 +18,7 @@ services:
     ports:
       - "80:80"
     volumes:
+      - web-root:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
@@ -32,13 +33,20 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --email jamesoshea89@hotmail.com --agree-tos --no-eff-email --staging -d mesoshea.com  -d www.mesoshea.com
+    command: certonly --webroot --webroot-path=/var/www/html --email jamesoshea89@hotmail.com --agree-tos --no-eff-email --staging -d mesoshea.com  -d www.mesoshea.com
 
 volumes:
   certbot-etc:
   certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/james/filepret/build/
+      o: bind
 
 networks:
   app-network:
