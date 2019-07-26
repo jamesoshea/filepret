@@ -53,10 +53,12 @@ app.post("/api/upload", async (req, res, next) => {
     const currentTime = Date.now();
     const fileName = `/tmp/${file.md5}-${currentTime}.js`;
     await ExpressMoveFilePromisified(file, fileName);
+
     const unformattedFile = fs.readFileSync(fileName).toString();
     const formattedFile = prettier.format(unformattedFile);
     const base64data = new Buffer(formattedFile, "binary");
     await S3PutObjectPromisified(fileName, base64data);
+
     fs.writeFileSync(
       `/tmp/${file.md5}-${currentTime}-formatted.js`,
       formattedFile
