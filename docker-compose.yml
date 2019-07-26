@@ -45,7 +45,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/j.oshea/git/filepret/build/
+      device: /home/james/filepret/build/
       o: bind
 
 networks:
