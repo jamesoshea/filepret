@@ -49,6 +49,12 @@ volumes:
       type: none
       device: /home/james/filepret/build/
       o: bind
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/james/filepret/dhparam/
+      o: bind
 
 networks:
   app-network:
