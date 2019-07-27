@@ -38,7 +38,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email jamesoshea89@hotmail.com --agree-tos --no-eff-email --force-renewal -d mesoshea.com  -d www.mesoshea.com
+    command: certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL_ADDRESS} --agree-tos --no-eff-email --force-renewal -d ${CERTBOT_DOMAIN_NAME}  -d www.${CERTBOT_DOMAIN_NAME}
 
 volumes:
   certbot-etc:
@@ -47,13 +47,13 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/james/filepret/build/
+      device: /home/${UBUNTU_USERNAME}/filepret/build/
       o: bind
   dhparam:
     driver: local
     driver_opts:
       type: none
-      device: /home/james/filepret/dhparam/
+      device: /home/${UBUNTU_USERNAME}/filepret/dhparam/
       o: bind
 
 networks:
