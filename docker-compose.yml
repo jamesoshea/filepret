@@ -12,7 +12,7 @@ services:
       - app-network
 
   webserver:
-    image: openresty/openresty-alpine
+    image: openresty/openresty:alpine
     container_name: webserver
     restart: unless-stopped
     ports:
