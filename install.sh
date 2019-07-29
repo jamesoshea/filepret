@@ -1,5 +1,6 @@
 #!/bin/sh
 
+mkdir build
 docker-compose up -d
 docker-compose stop webserver
 mkdir dhparam
