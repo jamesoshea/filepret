@@ -38,7 +38,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL_ADDRESS} --agree-tos --no-eff-email --force-renewal -d ${CERTBOT_DOMAIN_NAME}  -d www.${CERTBOT_DOMAIN_NAME}
+    command: certonly --webroot --webroot-path=/var/www/html --email ${CERTBOT_EMAIL_ADDRESS} --agree-tos --no-eff-email -d ${CERTBOT_DOMAIN_NAME}  -d www.${CERTBOT_DOMAIN_NAME}
 
 volumes:
   certbot-etc:
