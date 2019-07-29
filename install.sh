@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 docker-compose up -d
 docker-compose stop webserver

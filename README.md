@@ -12,10 +12,10 @@ It was my friend Kevin's idea
 
 ## Installation
 
-You'll need an ubuntu server, like the ones provided by DigitalOcean, with a non-root user with sudo privileges. You'll also need Docker and docker-compose installed. Then, clone the repo into the folder `filepret`.
-
-`docker-compose build`
-`docker-compose up`
+- You'll need an ubuntu server, like the ones provided by DigitalOcean, with a non-root user with sudo privileges. You'll also need Docker and docker-compose installed. Then, clone the repo into the folder `filepret`.
+- Create a .env file.
+- Create two `A` records which redirect from your domain name to the new server instance. One without `www.`, and one with.
+- Run `source '.env' && sh 'install.sh'`
 
 ## Live "Demo"
 
