@@ -12,6 +12,8 @@ It was my friend Kevin's idea
 
 ## Installation
 
+You'll need an ubuntu server, like the ones provided by DigitalOcean, with a non-root user with sudo privileges. You'll also need Docker and docker-compose installed. Then, clone the repo into the folder `filepret`.
+
 `docker-compose build`
 `docker-compose up`
 
