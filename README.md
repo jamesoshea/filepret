@@ -23,6 +23,12 @@ It was my friend Kevin's idea
 
 ## Roadmap
 
+- Migration to a Next.js starter template with auth and roting already implemented
+
+  - Possible candidates:
+  - https://nextjs-starter.now.sh/
+  - https://github.com/PabloSzx/Next-API-Middleware-Passport-Sequelize-TypeScript
+
 - Multiple language support (thanks to prettier) with automatic language detection
 
 ## Contributing
