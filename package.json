@@ -44,5 +44,8 @@
     "react-scripts": "3.0.1",
     "react-syntax-highlighter": "^11.0.2",
     "styled-components": "^4.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0"
   }
 }
