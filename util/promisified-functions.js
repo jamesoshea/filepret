@@ -10,8 +10,8 @@ module.exports.S3PutObjectPromisified = (fileName, data) => {
     try {
       s3.putObject(
         {
-          Bucket: "host-with-the-most",
-          Key: fileName.slice(5),
+          Bucket: "pret-a-formatter",
+          Key: fileName,
           Body: data,
           ACL: "public-read"
         },
